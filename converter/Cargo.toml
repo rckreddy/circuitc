@@ -1,0 +1,35 @@
+# circuitc-converter — Rust half of the circuitc toolchain.
+#
+# Both [lib] and [[bin]] targets exist so integration tests in
+# `tests/snapshot.rs` can `use circuitc_converter::*` to reach the
+# pure-functional pieces (ir, kicad, erc) while `main.rs` stays a thin
+# CLI shell on top.
+
+[package]
+name = "circuitc-converter"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# `anyhow` for the CLI's main — context-chained errors with `.context()`
+# at each I/O boundary. Notebook skill 45.
+anyhow = "1"
+
+# `clap` derive for argv parsing — declarative, type-checked.
+# Notebook skill 174.
+clap = { version = "4", features = ["derive"] }
+
+# `serde` + `serde_json` to deserialise the KCL-emitted JSON into our
+# Rust IR. The whole `ir` module is just data + derive macros.
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# `thiserror` for the ERC error enum — derive Display + Error rather
+# than hand-rolling impls. Notebook skill 44.
+thiserror = "1"
+
+[dev-dependencies]
+# `insta` for snapshot-testing the generated KiCad netlist. First run
+# writes `tests/snapshots/*.snap`; subsequent runs diff against it.
+# Notebook skill 116.
+insta = "1"

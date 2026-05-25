@@ -1,0 +1,27 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.7/.schema/devbox.schema.json",
+  "packages": [
+    "rustup@latest",
+    "just@latest",
+    "jq@latest",
+    "git@latest"
+  ],
+  "shell": {
+    "init_hook": [
+      "echo '🔧 circuitc dev environment'",
+      "rustup default stable 2>/dev/null || rustup install stable",
+      "command -v cargo-insta >/dev/null || (echo '📦 Installing cargo-insta...' && cargo install cargo-insta)",
+      "command -v kcl >/dev/null || (echo '📦 Installing KCL CLI...' && curl -fsSL https://kcl-lang.io/script/install-cli.sh | bash)",
+      "export PATH=\"$HOME/.kcl/kclvm/bin:$PATH\""
+    ],
+    "scripts": {
+      "build-kcl": "mkdir -p output && cd kcl && kcl run designs/blinky.k -o ../output/blinky.json --format json",
+      "build-rust": "cd converter && cargo build --release",
+      "convert": "./converter/target/release/circuitc-converter --input output/blinky.json --output output/blinky.net",
+      "pcb": "./converter/target/release/circuitc-converter --input output/blinky.json --output output/blinky.kicad_pcb --format pcb",
+      "all": "devbox run build-kcl && devbox run build-rust && devbox run convert",
+      "all-pcb": "devbox run build-kcl && devbox run build-rust && devbox run pcb",
+      "clean": "rm -rf output/* converter/target"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+# Rust — Cargo's build directory; can rebuild from source.
+converter/target/
+**/*.rs.bk
+
+# KCL — kclvm caches modules and intermediate artefacts here.
+kcl/.kclvm/
+
+# Generated artefacts — the whole point is that these are produced
+# from `kcl/` + `converter/`, so they shouldn't live in git.
+output/
+
+# Devbox — local nix profile + activation script, machine-specific.
+.devbox/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# insta snapshot review artefacts — transient, regenerated on each
+# `cargo test`. Accept with `cargo insta accept` to produce the
+# committed `.snap` file alongside.
+*.snap.new
+
+# Project spec documents — kept local, not tracked. These are the
+# design notes / roadmap the repo realises but aren't meant to ship
+# with the public code.
+circuitc-v*-spec.md
